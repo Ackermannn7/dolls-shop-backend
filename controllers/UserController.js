@@ -93,6 +93,7 @@ export const getMe = async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
+
       message: "Can't get user!",
     });
   }
