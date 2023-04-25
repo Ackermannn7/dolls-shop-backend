@@ -70,7 +70,35 @@ export const create = async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: "Can't create articles!",
+      message: "Can't create article!",
+    });
+  }
+};
+
+export const update = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    await PostModel.updateOne(
+      {
+        _id: postId,
+      },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        tags: req.body.tags,
+        imageUrl: req.body.imageUrl,
+        user: req.userId,
+      }
+    );
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Can't update article!",
     });
   }
 };
