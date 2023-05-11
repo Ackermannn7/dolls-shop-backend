@@ -2,17 +2,20 @@ import express from "express";
 // import fs from "fs";
 // import multer from "multer";
 import mongoose from "mongoose";
-// import cors from "cors";
+import cors from "cors";
 
-// import {
-//   registerValidation,
-//   loginValidation,
-//   postCreateValidation,
-// } from "./validations.js";
+import {
+  registerValidation,
+  loginValidation,
+  postCreateValidation,
+} from "./validations.js";
 
-// import { UserController, PostController } from "./controllers/index.js";
-import { DollsController } from "./controllers/index.js";
-// import { handleValidationErrors, checkAuth } from "./utils/index.js";
+import {
+  UserController,
+  PostController,
+  DollsController,
+} from "./controllers/index.js";
+import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
 mongoose
   .connect(
@@ -24,16 +27,17 @@ mongoose
 const app = express();
 
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 
 app.get("/dolls", DollsController.getAllDolls);
+app.post("/dolls", checkAuth, DollsController.createDoll);
 
-// app.post(
-//   "/auth/login",
-//   loginValidation,
-//   handleValidationErrors,
-//   UserController.login
-// );
+app.post(
+  "/auth/login",
+  loginValidation,
+  handleValidationErrors,
+  UserController.login
+);
 // app.post(
 //   "/auth/register",
 //   registerValidation,

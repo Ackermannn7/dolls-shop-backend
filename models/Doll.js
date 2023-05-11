@@ -21,7 +21,7 @@ const DollSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
-      default: [],
+      //default: [],
       required: true,
     },
   },
