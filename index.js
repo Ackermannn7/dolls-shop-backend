@@ -28,6 +28,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use("/photos", express.static("photos"));
 
 app.get("/dolls", DollsController.getAllDolls);
 app.post("/dolls", checkAuth, DollsController.createDoll);
