@@ -14,6 +14,7 @@ import {
   UserController,
   PostController,
   DollsController,
+  GalleryController,
 } from "./controllers/index.js";
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
@@ -49,6 +50,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
 });
 app.get("/dolls", DollsController.getAllDolls);
 app.post("/dolls", checkAuth, DollsController.createDoll);
+
+app.get("/gallery", GalleryController.getGallery);
+app.post("/addPhoto", GalleryController.addPhoto);
 
 app.post(
   "/auth/login",
