@@ -93,3 +93,29 @@ export const getMe = async (req, res) => {
     });
   }
 };
+
+export const update = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    await UserModel.updateOne(
+      {
+        _id: userId,
+      },
+      {
+        fullName: req.body.fullName,
+        email: req.body.email,
+        imageUrl: req.body.imageUrl,
+      }
+    );
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Can't update article!",
+    });
+  }
+};

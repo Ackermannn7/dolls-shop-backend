@@ -1,13 +1,13 @@
 import express from "express";
 // import fs from "fs";
-// import multer from "multer";
+import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
 
 import {
   registerValidation,
   loginValidation,
-  postCreateValidation,
+  // postCreateValidation,
 } from "./validations.js";
 
 import {
@@ -26,10 +26,27 @@ mongoose
 
 const app = express();
 
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    cb(null, "avatars");
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
 app.use(express.json());
 app.use(cors());
 app.use("/photos", express.static("photos"));
+app.use("/avatars", express.static("avatars"));
 
+app.post("/upload", upload.single("image"), (req, res) => {
+  res.json({
+    url: `avatars/${req.file.originalname}`,
+  });
+});
 app.get("/dolls", DollsController.getAllDolls);
 app.post("/dolls", checkAuth, DollsController.createDoll);
 
@@ -39,13 +56,13 @@ app.post(
   handleValidationErrors,
   UserController.login
 );
-// app.post(
-//   "/auth/register",
-//   registerValidation,
-//   handleValidationErrors,
-//   UserController.register
-// );
-// app.get("/auth/me", checkAuth, UserController.getMe);
+app.post(
+  "/auth/register",
+  registerValidation,
+  handleValidationErrors,
+  UserController.register
+);
+app.get("/auth/me", checkAuth, UserController.getMe);
 
 // app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 //   res.json({

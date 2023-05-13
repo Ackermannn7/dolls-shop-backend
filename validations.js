@@ -16,18 +16,18 @@ export const registerValidation = [
   body("avatarUrl", "Incorrect link of the avatar").optional().isURL(),
 ];
 
-export const postCreateValidation = [
-  body(
-    "title",
-    "The title of the article should be at least 3 characters long!"
-  )
-    .isLength({ min: 3 })
-    .isString(),
-  body("text", "The text of the article should be at least 3 characters long!")
-    .isLength({
-      min: 3,
-    })
-    .isString(),
-  body("tags", "Incorrect tag format").optional().isString(),
-  body("imageUrl", "Incorrect link of the image").optional().isString(),
-];
+// export const postCreateValidation = [
+//   body(
+//     "title",
+//     "The title of the article should be at least 3 characters long!"
+//   )
+//     .isLength({ min: 3 })
+//     .isString(),
+//   body("text", "The text of the article should be at least 3 characters long!")
+//     .isLength({
+//       min: 3,
+//     })
+//     .isString(),
+//   body("tags", "Incorrect tag format").optional().isString(),
+//   body("imageUrl", "Incorrect link of the image").optional().isString(),
+// ];
