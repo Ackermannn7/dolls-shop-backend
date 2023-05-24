@@ -13,6 +13,30 @@ export const getAllDolls = async (req, res) => {
   }
 };
 
+export const getOne = async (req, res) => {
+  try {
+    const dollId = req.params.id;
+
+    const doll = await DollModel.findOneAndUpdate(
+      {
+        _id: dollId,
+      },
+      {
+        $inc: { viewsCount: 1 },
+      },
+      {
+        returnDocument: "after",
+      }
+    );
+    res.json(doll);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Can't get doll!",
+    });
+  }
+};
+
 export const createDoll = async (req, res) => {
   try {
     const doc = new DollModel({

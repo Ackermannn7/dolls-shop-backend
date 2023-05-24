@@ -4,15 +4,10 @@ import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import {
-  registerValidation,
-  loginValidation,
-  // postCreateValidation,
-} from "./validations.js";
+import { registerValidation, loginValidation } from "./validations.js";
 
 import {
   UserController,
-  PostController,
   DollsController,
   GalleryController,
 } from "./controllers/index.js";
@@ -49,6 +44,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
   });
 });
 app.get("/dolls", DollsController.getAllDolls);
+app.get("/dolls/:id", DollsController.getOne);
 app.post("/dolls", checkAuth, DollsController.createDoll);
 
 app.get("/gallery", GalleryController.getGallery);

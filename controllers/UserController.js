@@ -105,7 +105,7 @@ export const update = async (req, res) => {
       {
         fullName: req.body.fullName,
         email: req.body.email,
-        imageUrl: req.body.imageUrl,
+        avatarUrl: req.body.avatarUrl,
       }
     );
     res.json({
@@ -115,7 +115,7 @@ export const update = async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: "Can't update article!",
+      message: "Can't update user!",
     });
   }
 };
