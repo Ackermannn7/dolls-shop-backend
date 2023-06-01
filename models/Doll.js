@@ -24,6 +24,7 @@ const DollSchema = new mongoose.Schema(
       //default: [],
       required: true,
     },
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
   {
     timestamps: true,

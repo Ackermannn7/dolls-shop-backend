@@ -10,6 +10,7 @@ import {
   UserController,
   DollsController,
   GalleryController,
+  CommentsController,
 } from "./controllers/index.js";
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
@@ -46,6 +47,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
 app.get("/dolls", DollsController.getAllDolls);
 app.get("/dolls/:id", DollsController.getOne);
 app.post("/dolls", checkAuth, DollsController.createDoll);
+
+app.post("/comments/:id", checkAuth, CommentsController.createComment);
+app.get("/dolls/comments/:id", DollsController.getComments);
 
 app.get("/gallery", GalleryController.getGallery);
 app.post("/addPhoto", GalleryController.addPhoto);

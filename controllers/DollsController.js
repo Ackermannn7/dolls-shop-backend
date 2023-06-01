@@ -1,4 +1,5 @@
 import DollModel from "../models/Doll.js";
+import CommentModel from "../models/Comment.js";
 
 export const getAllDolls = async (req, res) => {
   try {
@@ -44,6 +45,7 @@ export const createDoll = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       imageUrl: req.body.imageUrl,
+      comments: req.body.comments,
     });
 
     const post = await doc.save();
@@ -53,6 +55,23 @@ export const createDoll = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Can't create doll!",
+    });
+  }
+};
+
+export const getComments = async (req, res) => {
+  try {
+    const doll = await DollModel.findById(req.params.id);
+    const comments = await Promise.all(
+      doll.comments.map((comment) => {
+        return CommentModel.findById(comment);
+      })
+    );
+    res.json(comments);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Can't get comments!",
     });
   }
 };
