@@ -45,6 +45,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
   });
 });
 app.get("/dolls", DollsController.getAllDolls);
+app.get("/dollsCarousel", DollsController.getDollsCarousel);
 app.get("/dolls/:id", DollsController.getOne);
 app.post("/dolls", checkAuth, DollsController.createDoll);
 

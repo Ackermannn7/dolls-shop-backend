@@ -3,6 +3,46 @@ import CommentModel from "../models/Comment.js";
 
 export const getAllDolls = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) - 1 || 0;
+    const limit = parseInt(req.query.limit) || 3;
+    const search = req.query.searchValue || "";
+    let sort = req.query.sort || "viewsCount";
+    req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+    let sortBy = {};
+    if (sort[1]) {
+      sortBy[sort[0]] = sort[1];
+    } else {
+      sortBy[sort[0]] = "asc";
+    }
+    const dolls = await DollModel.find({
+      dollName: { $regex: search, $options: "i" },
+    })
+      .sort(sortBy)
+      .skip(page * limit)
+      .limit(limit);
+    const total = await DollModel.countDocuments({
+      dollName: { $regex: search, $options: "i" },
+    });
+
+    const response = {
+      error: false,
+      total,
+      page: page + 1,
+      limit,
+      dolls,
+    };
+    res.json(response);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Can`t get dolls!",
+    });
+  }
+};
+
+export const getDollsCarousel = async (req, res) => {
+  try {
     const dolls = await DollModel.find().exec();
     res.json(dolls);
   } catch (err) {
