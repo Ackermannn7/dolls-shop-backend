@@ -7,7 +7,7 @@ export default (req, res, next) => {
     return res.status(403).json({ message: "Access denied!" });
   } else {
     try {
-      const decoded = jwt.verify(token, "secret123");
+      const decoded = jwt.verify(token, "secretCode");
       req.userId = decoded._id;
       next();
     } catch (err) {

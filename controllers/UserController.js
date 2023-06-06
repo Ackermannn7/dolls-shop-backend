@@ -16,7 +16,7 @@ export const register = async (req, res) => {
     });
 
     const user = await doc.save();
-    const token = jwt.sign({ _id: user._id }, "secret123", {
+    const token = jwt.sign({ _id: user._id }, "secretCode", {
       expiresIn: "1h",
     });
 
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
         message: "Incorrect login or password!",
       });
     }
-    const token = jwt.sign({ _id: user._id }, "secret123", {
+    const token = jwt.sign({ _id: user._id }, "secretCode", {
       expiresIn: "1h",
     });
     const { passwordHash, ...userData } = user._doc;
@@ -96,26 +96,49 @@ export const getMe = async (req, res) => {
 
 export const update = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const { fullName, email, avatarUrl, currentPassword, newPassword } =
+      req.body;
+    const userId = req.userId;
 
-    await UserModel.updateOne(
-      {
-        _id: userId,
-      },
-      {
-        fullName: req.body.fullName,
-        email: req.body.email,
-        avatarUrl: req.body.avatarUrl,
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+
+      if (!isMatch) {
+        return res.status(403).json({
+          success: false,
+          message: "Incorrect current password!",
+        });
       }
-    );
-    res.json({
-      success: true,
-    });
+
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(newPassword, salt);
+
+      user.passwordHash = hash;
+    }
+
+    user.fullName = fullName;
+    user.email = email;
+    user.avatarUrl = avatarUrl;
+
+    const updatedUser = await user.save();
+
+    const { passwordHash, ...userData } = updatedUser._doc;
+
+    res.json(userData);
   } catch (err) {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: "Can't update user!",
+      message: "Can't update user info!",
     });
   }
 };

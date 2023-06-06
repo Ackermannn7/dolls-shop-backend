@@ -4,7 +4,7 @@ import CommentModel from "../models/Comment.js";
 export const getAllDolls = async (req, res) => {
   try {
     const page = parseInt(req.query.page) - 1 || 0;
-    const limit = parseInt(req.query.limit) || 3;
+    const limit = parseInt(req.query.limit) || 6;
     const search = req.query.searchValue || "";
     let sort = req.query.sort || "viewsCount";
     req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
