@@ -8,21 +8,32 @@ const populate = {
     select: ["dollName", "imageUrl", "price"],
   },
 };
+
 export const saveOrder = async (req, res) => {
   try {
-    const { user, items, total } = req.body;
+    const { userData, items, totalPrice } = req.body;
+    console.log(userData, items, totalPrice);
 
-    // Create a new cart instance
-    const cart = new OrderModel({
-      user,
-      items,
-      total,
+    // Extract an array of dollIds from the items array
+    const dollIds = items.map((item) => item.id);
+
+    // Create an array of items with doll references
+    const itemRefs = dollIds.map((dollId) => ({ doll: dollId }));
+
+    // Create a new order instance
+    const newOrder = new OrderModel({
+      user: userData._id,
+      items: itemRefs,
+      total: totalPrice,
     });
 
-    // Save the cart to the database
-    const savedCart = await cart.save();
+    // Save the order to the database
+    const savedOrder = await newOrder.save();
 
-    res.json(savedCart);
+    // Populate the 'items' field with the referenced 'Doll' model
+    const populatedOrder = await OrderModel.populate(savedOrder, populate);
+
+    res.json(populatedOrder);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -33,7 +44,6 @@ export const saveOrder = async (req, res) => {
 };
 
 export const getOrders = async (req, res) => {
-  console.log(req.params.id);
   try {
     const orders = await OrderModel.find({ user: req.params.id })
       .populate(populate)

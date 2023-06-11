@@ -6,12 +6,13 @@ const OrderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     items: [
       {
         doll: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Doll", // Reference to the Doll model
+          ref: "Doll",
           required: true,
         },
         quantity: {
