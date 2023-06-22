@@ -1,5 +1,5 @@
 import express from "express";
-// import fs from "fs";
+import fs from "fs";
 import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -15,10 +15,11 @@ import {
 } from "./controllers/index.js";
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
+// database
+// "mongodb+srv://admin:Qweasdzxc@cluster0.s7bwyba.mongodb.net/dolls-shop"
+
 mongoose
-  .connect(
-    "mongodb+srv://admin:Qweasdzxc@cluster0.s7bwyba.mongodb.net/dolls-shop"
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("DB connected successfully!"))
   .catch((err) => console.log(err));
 
@@ -108,7 +109,7 @@ app.patch("/auth/updateUser", checkAuth, UserController.update);
 //   PostController.update
 // );
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
   if (err) console.log(err);
   console.log(`Server is ok!`);
 });
