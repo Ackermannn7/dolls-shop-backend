@@ -11,8 +11,7 @@ const populate = {
 
 export const saveOrder = async (req, res) => {
   try {
-    const { userData, items, totalPrice } = req.body;
-    console.log(userData, items, totalPrice);
+    const { userData, items, totalPrice, formData } = req.body;
 
     // Extract an array of dollIds from the items array
     const dollIds = items.map((item) => item.id);
@@ -25,6 +24,7 @@ export const saveOrder = async (req, res) => {
       user: userData._id,
       items: itemRefs,
       total: totalPrice,
+      formData: formData,
     });
 
     // Save the order to the database
@@ -32,7 +32,6 @@ export const saveOrder = async (req, res) => {
 
     // Populate the 'items' field with the referenced 'Doll' model
     const populatedOrder = await OrderModel.populate(savedOrder, populate);
-
     res.json(populatedOrder);
   } catch (err) {
     console.log(err);

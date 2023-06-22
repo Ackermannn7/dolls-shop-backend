@@ -27,6 +27,28 @@ const OrderSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    formData: {
+      orderFullName: {
+        type: String,
+        required: true,
+      },
+      orderPhoneNumber: {
+        type: String,
+        required: true,
+      },
+      selectedRegion: {
+        type: String,
+        required: true,
+      },
+      selectedCity: {
+        type: String,
+        required: true,
+      },
+      selectedBranch: {
+        type: String,
+        required: true,
+      },
+    },
   },
   {
     timestamps: true,

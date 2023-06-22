@@ -109,6 +109,7 @@ export const update = async (req, res) => {
       });
     }
 
+    // Check if the provided current password matches the stored password hash
     if (currentPassword && newPassword) {
       const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
 
@@ -119,15 +120,17 @@ export const update = async (req, res) => {
         });
       }
 
+      // Generate a new password hash for the updated password
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(newPassword, salt);
 
       user.passwordHash = hash;
     }
 
-    user.fullName = fullName;
-    user.email = email;
-    user.avatarUrl = avatarUrl;
+    // Update the user's information
+    user.fullName = fullName || user.fullName;
+    user.email = email || user.email;
+    user.avatarUrl = avatarUrl || user.avatarUrl;
 
     const updatedUser = await user.save();
 
