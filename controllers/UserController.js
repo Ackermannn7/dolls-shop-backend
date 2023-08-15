@@ -1,31 +1,40 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import UserModel from "../models/User.js";
+import Token from "../models/Token.js";
 
 export const register = async (req, res) => {
   try {
-    const password = req.body.password;
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const existingUser = await UserModel.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        status: false,
+        message: "Email already exists!",
+      });
+    } else {
+      const password = req.body.password;
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt);
 
-    const doc = new UserModel({
-      fullName: req.body.fullName,
-      email: req.body.email,
-      avatarUrl: req.body.avatarUrl,
-      passwordHash: hash,
-    });
+      const doc = new UserModel({
+        fullName: req.body.fullName,
+        email: req.body.email,
+        avatarUrl: req.body.avatarUrl,
+        passwordHash: hash,
+      });
 
-    const user = await doc.save();
-    const token = jwt.sign({ _id: user._id }, "secretCode", {
-      expiresIn: "1h",
-    });
+      const user = await doc.save();
+      const token = jwt.sign({ _id: user._id }, "secretCode3228!-32fd", {
+        expiresIn: "1h",
+      });
 
-    const { passwordHash, ...userData } = user._doc;
-
-    res.json({
-      ...userData,
-      token,
-    });
+      const { passwordHash, ...userData } = user._doc;
+      res.json({
+        ...userData,
+        token,
+      });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -41,7 +50,8 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(403).json({
         success: false,
-        message: "Incorrect login or password!",
+        status: false,
+        message: "User not found!",
       });
     }
     const isMatch = await bcrypt.compare(
@@ -54,9 +64,14 @@ export const login = async (req, res) => {
         message: "Incorrect login or password!",
       });
     }
-    const token = jwt.sign({ _id: user._id }, "secretCode", {
+    const token = jwt.sign({ _id: user._id }, "secretCode3228!-32fd", {
       expiresIn: "1h",
     });
+    await Token.findOneAndUpdate(
+      { _userId: user._id, tokenType: "login" },
+      { token: token },
+      { new: true, upsert: true }
+    );
     const { passwordHash, ...userData } = user._doc;
     res.json({
       ...userData,
@@ -67,6 +82,22 @@ export const login = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Can't login user!",
+    });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    await Token.findOneAndDelete({ _userId: req.userId, tokenType: "login" });
+    return res.status(200).json({
+      status: true,
+      message: "Logout successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Can't logout user!",
     });
   }
 };

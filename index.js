@@ -14,12 +14,16 @@ import {
   CartController,
 } from "./controllers/index.js";
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
+import checkTokenExpiration from "./utils/checkTokenExpiration.js";
 
 // database
 // "mongodb+srv://admin:Qweasdzxc@cluster0.s7bwyba.mongodb.net/dolls-shop"
 
 mongoose
   .connect(process.env.MONGO_URI)
+  // .connect(
+  //   "mongodb+srv://admin:Qweasdzxc@cluster0.s7bwyba.mongodb.net/dolls-shop"
+  // )
   .then(() => console.log("DB connected successfully!"))
   .catch((err) => console.log(err));
 
@@ -40,6 +44,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/photos", express.static("photos"));
 app.use("/avatars", express.static("avatars"));
+app.use(checkTokenExpiration);
 
 //avatar upload
 app.post("/upload", upload.single("image"), (req, res) => {
@@ -81,8 +86,9 @@ app.post(
   UserController.register
 );
 app.get("/auth/me", checkAuth, UserController.getMe);
+app.get("/auth/logout", checkAuth, UserController.logout);
 app.patch("/auth/updateUser", checkAuth, UserController.update);
-
+// app.post("/auth/forgotPassword", UserController.forgotPassword);
 // app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 //   res.json({
 //     url: `uploads/${req.file.originalname}`,
@@ -110,6 +116,7 @@ app.patch("/auth/updateUser", checkAuth, UserController.update);
 // );
 
 app.listen(process.env.PORT || 4444, (err) => {
+  // app.listen(4444, (err) => {
   if (err) console.log(err);
   console.log(`Server is ok!`);
 });
