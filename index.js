@@ -16,9 +16,6 @@ import {
 import { handleValidationErrors, checkAuth } from "./utils/index.js";
 import checkTokenExpiration from "./utils/checkTokenExpiration.js";
 
-// database
-// "mongodb+srv://admin:Qweasdzxc@cluster0.s7bwyba.mongodb.net/dolls-shop"
-
 mongoose
   .connect(process.env.MONGO_URI)
   // .connect(
@@ -85,7 +82,7 @@ app.post(
   handleValidationErrors,
   UserController.register
 );
-app.get("/auth/me", checkAuth, UserController.getMe);
+app.get("/auth/me", checkAuth, checkTokenExpiration, UserController.getMe);
 app.get("/auth/logout", checkAuth, UserController.logout);
 app.patch("/auth/updateUser", checkAuth, UserController.update);
 // app.post("/auth/forgotPassword", UserController.forgotPassword);

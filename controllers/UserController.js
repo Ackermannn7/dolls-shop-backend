@@ -67,15 +67,17 @@ export const login = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, "secretCode3228!-32fd", {
       expiresIn: "1h",
     });
+    const expirationDate = new Date(Date.now() + 3600000);
     await Token.findOneAndUpdate(
       { _userId: user._id, tokenType: "login" },
-      { token: token },
+      { token: token, expirationDate: expirationDate },
       { new: true, upsert: true }
     );
     const { passwordHash, ...userData } = user._doc;
     res.json({
       ...userData,
       token,
+      expirationDate,
     });
   } catch (err) {
     console.log(err);

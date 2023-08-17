@@ -2,7 +2,6 @@ import Token from "../models/Token.js";
 
 const checkTokenExpiration = async (req, res, next) => {
   const token = (req.headers.authorization || "").replace(/Bearer\s?/, "");
-  console.log(token);
   if (token) {
     try {
       const tokenData = await Token.findOne({ token });
