@@ -82,10 +82,12 @@ app.post(
   handleValidationErrors,
   UserController.register
 );
-app.get("/auth/me", checkAuth, checkTokenExpiration, UserController.getMe);
+app.get("/auth/me", checkAuth, UserController.getMe);
 app.get("/auth/logout", checkAuth, UserController.logout);
 app.patch("/auth/updateUser", checkAuth, UserController.update);
-// app.post("/auth/forgotPassword", UserController.forgotPassword);
+app.post("/auth/forgotPassword", UserController.forgotPassword);
+app.put("/auth/resetPassword/:token", UserController.resetPassword);
+app.put("/auth/changePassword", checkAuth, UserController.changePassword);
 // app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 //   res.json({
 //     url: `uploads/${req.file.originalname}`,

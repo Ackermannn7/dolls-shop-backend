@@ -1,15 +1,15 @@
-const resetPassword = (email, token) => {
+const forgotPasswordMsg = (email, token) => {
   const emailTemplate = {
     from: "dollsForAllStore@gmail.com",
     to: email,
     subject: "Password reset for " + email,
     text:
       "Password Reset Link: " +
-      "localhost:4444/customers/" +
+      "http://localhost:4444/auth/" +
       "resetPassword/" +
       token,
   };
   return emailTemplate;
 };
 
-export { resetPassword };
+export default forgotPasswordMsg;
