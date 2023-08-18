@@ -5,7 +5,8 @@ const forgotPasswordMsg = (email, token) => {
     subject: "Password reset for " + email,
     text:
       "Password Reset Link: " +
-      "http://localhost:4444/auth/" +
+      // "http://localhost:3000/" +
+      "https://dolls-for-all.onrender.com/" +
       "resetPassword/" +
       token,
   };

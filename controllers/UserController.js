@@ -27,7 +27,7 @@ export const register = async (req, res) => {
       });
 
       const user = await doc.save();
-      const token = jwt.sign({ _id: user._id }, "secretCode3228!-32fd", {
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY_LOGIN, {
         expiresIn: "1h",
       });
       const expirationDate = new Date(Date.now() + 3600000);
@@ -71,7 +71,7 @@ export const login = async (req, res) => {
         message: "Incorrect login or password!",
       });
     }
-    const token = jwt.sign({ _id: user._id }, "secretCode3228!-32fd", {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY_LOGIN, {
       expiresIn: "1h",
     });
     const expirationDate = new Date(Date.now() + 3600000);
@@ -106,7 +106,7 @@ export const forgotPassword = async (req, res) => {
         message: "User not found!",
       });
     }
-    const token = jwt.sign({ _id: user._id }, "secretCode3228!-forpassreset", {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY_PASS_RESET, {
       expiresIn: "10m",
     });
     const expirationDate = new Date(Date.now() + 600000);
@@ -120,6 +120,7 @@ export const forgotPassword = async (req, res) => {
     sendEmail(emailTemplate);
     return res.status(200).json({
       status: true,
+      email: email,
       message: "Email for password reset was successfuly sent!",
     });
   } catch (error) {
@@ -134,9 +135,8 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const token = req.params.token;
   const { newPassword } = req.body;
-
   try {
-    const decoded = jwt.verify(token, "secretCode3228!-forpassreset");
+    const decoded = jwt.verify(token, process.env.JWT_KEY_PASS_RESET);
     const tokenData = await Token.findOne({
       _userId: decoded._id,
       token: token,

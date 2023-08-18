@@ -88,31 +88,6 @@ app.patch("/auth/updateUser", checkAuth, UserController.update);
 app.post("/auth/forgotPassword", UserController.forgotPassword);
 app.put("/auth/resetPassword/:token", UserController.resetPassword);
 app.put("/auth/changePassword", checkAuth, UserController.changePassword);
-// app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
-//   res.json({
-//     url: `uploads/${req.file.originalname}`,
-//   });
-// });
-// app.get("/tags", PostController.getLastTags);
-// app.get("/posts", PostController.getAll);
-// app.get("/posts/tags", PostController.getLastTags);
-// app.get("/posts/:id", PostController.getOne);
-
-// app.post(
-//   "/posts",
-//   checkAuth,
-//   postCreateValidation,
-//   handleValidationErrors,
-//   PostController.create
-// );
-// app.delete("/posts/:id", checkAuth, PostController.remove);
-// app.patch(
-//   "/posts/:id",
-//   checkAuth,
-//   postCreateValidation,
-//   handleValidationErrors,
-//   PostController.update
-// );
 
 app.listen(process.env.PORT || 4444, (err) => {
   // app.listen(4444, (err) => {

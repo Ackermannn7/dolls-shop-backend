@@ -14,8 +14,6 @@ const sendEmail = (emailTemplate) => {
   transporter.sendMail(emailTemplate, (err, info) => {
     if (err) {
       console.log(err);
-    } else {
-      console.log("Email sent: ", info.response);
     }
   });
 };
