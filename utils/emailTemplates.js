@@ -6,7 +6,7 @@ const forgotPasswordMsg = (email, token) => {
     text:
       "Password Reset Link: " +
       // "http://localhost:3000/" +
-      "https://dolls-for-all.onrender.com/" +
+      "https://dolls-shop.vercel.app/" +
       "resetPassword/" +
       token,
   };
